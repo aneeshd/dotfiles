@@ -8,6 +8,8 @@ PACKAGES="\
 	wget \
 	scons \
 	tmux \
+	vim \
+	graphviz \
 "
 
 CASKS="\
