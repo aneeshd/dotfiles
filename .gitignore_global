@@ -6,4 +6,8 @@
 *.o
 *.a
 *.so
-
+*.orig
+*.rej
+*.swp
+.#*
+*.obj

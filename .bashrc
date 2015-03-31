@@ -16,6 +16,16 @@ CDPATH='.:..:../..:~:~/Projects:~/Documents'
 
 bind space:magic-space   # Space dynamically expands any ! history expansions
 
+export PYTHONSTARTUP=$HOME/dotfiles/startup.py
+
+# If the output is smaller than the screen height is smaller,
+# less will just cat it
+# + support ANSI colors
+export LESS="-FX -R"
+
+# Syntax coloring with pygments in less, when opening source files
+export LESSOPEN='|~/dotfiles/lessfilter.sh %s'
+
 # Open a manpage in Preview, which can be saved to PDF
 function pman {
    man -t "${1}" | open -f -a /Applications/Preview.app
