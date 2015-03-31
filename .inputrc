@@ -1,0 +1,30 @@
+# Use Unicode & do NOT use the "8bit hack" to input/output non-ASCII characters
+# See http://code.google.com/p/iterm2/wiki/Keybindings
+set input-meta on
+set output-meta on
+set convert-meta off
+
+# When pressing up or down arrows,
+# show only history entries that match what was already typed
+"\e[A":history-search-backward
+"\e[B":history-search-forward
+"\e[C": forward-char
+"\e[D": backward-char
+
+# Turn on case insensitivity for tab-completion
+# Ex.: type "doc<tab>" to search for "Documents"
+set completion-ignore-case On
+
+#set show-all-if-ambiguous on
+#TAB: menu-complete
+
+## Readline behavior
+## Complete symlinks to folders with trailing /
+set mark-directories On
+set mark-symlinked-directories On
+
+# Insert-Option Macro
+"\M-o": "\C-p\C-a\M-f "
+
+set match-hidden-files off
+set visible-stats on
