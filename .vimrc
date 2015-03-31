@@ -441,3 +441,6 @@ if has ("gui_win32")
 	set sessionoptions+=resize  " Allow sessions to capture full window size on gvim
 	autocmd BufRead,BufNewFile *.vis source %
 endif
+
+set clipboard=unnamed
+
