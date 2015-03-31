@@ -1,3 +1,3 @@
 #!/bin/sh
 
-pip install pygments
+pip install --upgrade pygments
