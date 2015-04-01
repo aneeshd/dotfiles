@@ -5,7 +5,9 @@ export PATH=/usr/local/bin:$PATH
 # Load .bashrc if it exists
 test -f ~/.bashrc && source ~/.bashrc
 
+if ( hash brew 2>/dev/null ); then
 if [ -f $(brew --prefix)/etc/bash_completion ]; then
 	    source $(brew --prefix)/etc/bash_completion
+fi
 fi
 
