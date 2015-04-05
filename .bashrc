@@ -1,5 +1,4 @@
 export PATH=/usr/local/sbin:/usr/local/bin:$PATH
-alias ls='ls -F'
 
 # http://www.ukuug.org/events/linux2003/papers/bash_tips/
 shopt -s histappend
@@ -31,3 +30,6 @@ function pman {
    man -t "${1}" | open -f -a /Applications/Preview.app
 }
 
+if [ -f ~/.bash_aliases ]; then
+  source ~/.bash_aliases
+fi

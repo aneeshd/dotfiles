@@ -6,8 +6,10 @@ export PATH=/usr/local/bin:$PATH
 test -f ~/.bashrc && source ~/.bashrc
 
 if ( hash brew 2>/dev/null ); then
-if [ -f $(brew --prefix)/etc/bash_completion ]; then
-	    source $(brew --prefix)/etc/bash_completion
-fi
+	if [ -f $(brew --prefix)/etc/bash_completion ]; then
+		source $(brew --prefix)/etc/bash_completion
+	fi
+elif [ -f /etc/bash_completion ]; then
+	source /etc/bash_completion
 fi
 
