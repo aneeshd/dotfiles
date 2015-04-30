@@ -10,6 +10,7 @@ PACKAGES="\
 	tmux \
 	vim \
 	graphviz \
+	dos2unix \
 "
 
 CASKS="\
