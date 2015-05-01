@@ -11,6 +11,7 @@ PACKAGES="\
 	vim \
 	graphviz \
 	dos2unix \
+	ag \
 "
 
 CASKS="\
