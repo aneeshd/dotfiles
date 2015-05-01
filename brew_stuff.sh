@@ -31,10 +31,13 @@ brew update
 brew upgrade
 
 brew install $PACKAGES
-#brew cask install $CASKS
+brew cask install $CASKS
 
 brew cask install qlcolorcode qlstephen qlmarkdown quicklook-json qlprettypatch quicklook-csv betterzipql webp-quicklook suspicious-package && qlmanage -r
 
 brew cleanup
 brew prune
+
+# install Alcatraz
+curl -fsSL https://raw.githubusercontent.com/supermarin/Alcatraz/master/Scripts/install.sh | sh
 
