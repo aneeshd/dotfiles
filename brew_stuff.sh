@@ -1,6 +1,7 @@
 #!/bin/sh
 
 PACKAGES="\
+	coreutils \
 	git \
 	bash-completion \
 	reattach-to-user-namespace \
@@ -18,6 +19,9 @@ CASKS="\
 	virtualbox \
 	vagrant \
 	vagrant-manager \
+	iterm2 \
+	xquartz \
+	wireshark \
 "
 
 if ( ! which brew ); then
@@ -29,7 +33,7 @@ brew tap caskroom/cask
 brew tap caskroom/versions
 
 brew update
-brew upgrade
+brew upgrade --all
 
 brew install $PACKAGES
 brew cask install $CASKS
