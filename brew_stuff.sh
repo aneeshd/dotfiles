@@ -22,6 +22,7 @@ CASKS="\
 	iterm2 \
 	xquartz \
 	wireshark \
+	spectacle \
 "
 
 if ( ! which brew ); then
