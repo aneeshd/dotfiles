@@ -265,6 +265,11 @@ defaults write com.apple.TextEdit PlainTextEncoding -int 4
 defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4
 
 ###############################################################################
+###############################################################################
+wget https://github.com/altercation/solarized/blob/master/apple-colorpalette-solarized/solarized.clr?raw=true -O solarized.clr
+mv solarized.clr ~/Library/Colors
+
+###############################################################################
 # Kill affected applications                                                  #
 ###############################################################################
 

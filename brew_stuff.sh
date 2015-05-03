@@ -23,6 +23,7 @@ CASKS="\
 	xquartz \
 	wireshark \
 	spectacle \
+	java \
 "
 
 if ( ! which brew ); then
