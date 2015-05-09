@@ -13,6 +13,7 @@ PACKAGES="\
 	graphviz \
 	dos2unix \
 	ag \
+	astyle \
 "
 
 CASKS="\
