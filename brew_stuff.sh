@@ -25,6 +25,7 @@ CASKS="\
 	wireshark \
 	spectacle \
 	java \
+	flash \
 "
 
 if ( ! which brew ); then
