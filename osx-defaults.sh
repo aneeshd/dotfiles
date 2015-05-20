@@ -36,6 +36,7 @@ defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
 
 # Disable the “Are you sure you want to open this application?” dialog
 #defaults write com.apple.LaunchServices LSQuarantine -bool false
+defaults delete com.apple.LaunchServices LSQuarantine
 
 # Remove duplicates in the “Open With” menu (also see `lscleanup` alias)
 /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user
@@ -59,9 +60,11 @@ sudo systemsetup -setrestartfreeze on
 
 # Disable smart quotes as they’re annoying when typing code
 #defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
+defaults delete NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled 
 
 # Disable smart dashes as they’re annoying when typing code
 #defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
+defaults delete NSGlobalDomain NSAutomaticDashSubstitutionEnabled 
 
 ###############################################################################
 # Trackpad, mouse, keyboard, Bluetooth accessories, and input                 #
@@ -84,6 +87,7 @@ defaults write NSGlobalDomain KeyRepeat -int 0
 
 # Disable auto-correct
 #defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+defaults delete NSGlobalDomain NSAutomaticSpellingCorrectionEnabled
 
 ###############################################################################
 # Screen                                                                      #
@@ -111,6 +115,7 @@ defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
 
 # Finder: show hidden files by default
 #defaults write com.apple.finder AppleShowAllFiles -bool true
+defaults delete com.apple.finder AppleShowAllFiles
 
 # Finder: show all filename extensions
 defaults write NSGlobalDomain AppleShowAllExtensions -bool true
@@ -126,6 +131,7 @@ defaults write com.apple.finder QLEnableTextSelection -bool true
 
 # Display full POSIX path as Finder window title
 #defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
+defaults delete com.apple.finder _FXShowPosixPathInTitle 
 
 # When performing a search, search the current folder by default
 defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
@@ -195,6 +201,7 @@ defaults write com.apple.dock dashboard-in-overlay -bool true
 
 # Don’t automatically rearrange Spaces based on most recent use
 #defaults write com.apple.dock mru-spaces -bool false
+defaults delete com.apple.dock mru-spaces 
 
 # Make Dock icons of hidden applications translucent
 defaults write com.apple.dock showhidden -bool true
@@ -238,8 +245,8 @@ defaults write com.apple.mail NSUserKeyEquivalents -dict-add "Send" -string "@\\
 ###############################################################################
 
 # fetch Solarized Light & Dark
-wget https://raw.githubusercontent.com/altercation/solarized/master/iterm2-colors-solarized/Solarized%20Dark.itermcolors -O Solarized\ Dark.itermcolors
-wget https://raw.githubusercontent.com/altercation/solarized/master/iterm2-colors-solarized/Solarized%20Light.itermcolors -O Solarized\ Light.itermcolors
+wget --no-check-certificate https://raw.githubusercontent.com/altercation/solarized/master/iterm2-colors-solarized/Solarized%20Dark.itermcolors -O Solarized\ Dark.itermcolors
+wget --no-check-certificate https://raw.githubusercontent.com/altercation/solarized/master/iterm2-colors-solarized/Solarized%20Light.itermcolors -O Solarized\ Light.itermcolors
 
 # Install the Solarized Dark theme for iTerm
 open "${HOME}/dotfiles/Solarized Dark.itermcolors"
@@ -266,7 +273,7 @@ defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4
 
 ###############################################################################
 ###############################################################################
-wget https://github.com/altercation/solarized/blob/master/apple-colorpalette-solarized/solarized.clr?raw=true -O solarized.clr
+wget --no-check-certificate https://github.com/altercation/solarized/blob/master/apple-colorpalette-solarized/solarized.clr?raw=true -O solarized.clr
 mv solarized.clr ~/Library/Colors
 
 ###############################################################################
