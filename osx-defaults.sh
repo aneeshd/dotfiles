@@ -245,12 +245,14 @@ defaults write com.apple.mail NSUserKeyEquivalents -dict-add "Send" -string "@\\
 ###############################################################################
 
 # fetch Solarized Light & Dark
-wget --no-check-certificate https://raw.githubusercontent.com/altercation/solarized/master/iterm2-colors-solarized/Solarized%20Dark.itermcolors -O Solarized\ Dark.itermcolors
-wget --no-check-certificate https://raw.githubusercontent.com/altercation/solarized/master/iterm2-colors-solarized/Solarized%20Light.itermcolors -O Solarized\ Light.itermcolors
+if [ \! -e Solarized\ Dark.itermcolors ]; then
+	wget --no-check-certificate https://raw.githubusercontent.com/altercation/solarized/master/iterm2-colors-solarized/Solarized%20Dark.itermcolors -O Solarized\ Dark.itermcolors
+	wget --no-check-certificate https://raw.githubusercontent.com/altercation/solarized/master/iterm2-colors-solarized/Solarized%20Light.itermcolors -O Solarized\ Light.itermcolors
 
-# Install the Solarized Dark theme for iTerm
-open "${HOME}/dotfiles/Solarized Dark.itermcolors"
-open "${HOME}/dotfiles/Solarized Light.itermcolors"
+	# Install the Solarized Dark theme for iTerm
+	open "${HOME}/dotfiles/Solarized Dark.itermcolors"
+	open "${HOME}/dotfiles/Solarized Light.itermcolors"
+fi
 
 # Don’t display the annoying prompt when quitting iTerm
 defaults write com.googlecode.iterm2 PromptOnQuit -bool false
@@ -273,8 +275,10 @@ defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4
 
 ###############################################################################
 ###############################################################################
-wget --no-check-certificate https://github.com/altercation/solarized/blob/master/apple-colorpalette-solarized/solarized.clr?raw=true -O solarized.clr
-mv solarized.clr ~/Library/Colors
+if [ \! -e solarized.clr ]; then
+	wget --no-check-certificate https://github.com/altercation/solarized/blob/master/apple-colorpalette-solarized/solarized.clr?raw=true -O solarized.clr
+	cp solarized.clr ~/Library/Colors
+fi
 
 ###############################################################################
 # Kill affected applications                                                  #

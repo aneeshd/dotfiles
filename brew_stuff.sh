@@ -14,6 +14,7 @@ PACKAGES="\
 	dos2unix \
 	ag \
 	astyle \
+	fpp \
 "
 
 CASKS="\
