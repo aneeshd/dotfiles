@@ -17,5 +17,3 @@
 	copy-from-branch = !git show $1:$2 > $2
 	bdiff = !git diff $1:$2 $2
 
-[rerere]
-	enabled = 1
