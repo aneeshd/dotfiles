@@ -26,3 +26,7 @@ relink ~/.screenrc $DIR/.screenrc
 relink ~/.inputrc $DIR/.inputrc
 relink ~/.tmux.conf $DIR/.tmux.conf
 relink ~/.vimrc $DIR/.vimrc
+
+mkdir -p ~/.hammerspoon
+relink ~/.hammerspoon/init.lua $DIR/hammerspoon/init.lua
+

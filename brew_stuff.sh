@@ -24,9 +24,9 @@ CASKS="\
 	iterm2 \
 	xquartz \
 	wireshark \
-	spectacle \
 	java \
 	flash \
+	hammerspoon \
 "
 
 if ( ! which brew ); then
