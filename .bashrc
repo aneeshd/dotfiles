@@ -45,3 +45,5 @@ if [ -f ~/.bash_aliases.custom ]; then
   source ~/.bash_aliases.custom
 fi
 
+export HOMEBREW_GITHUB_API_TOKEN=8d2309999bda938dddb8114d92399a9335876f30
+

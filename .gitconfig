@@ -16,18 +16,8 @@
 	oldest-ancestor = !zsh -c 'diff --old-line-format= --new-line-format= <(git rev-list --first-parent \"${1:-master}\") <(git rev-list --first-parent \"${2:-HEAD}\") | head -1' -
 	copy-from-branch = !git show $1:$2 > $2
 	bdiff = !git diff $1:$2 $2
-	branches = !legit branches
-	graft = !legit graft
-	harvest = !legit harvest
-	publish = !legit publish
-	unpublish = !legit unpublish
-	sprout = !legit sprout
-	sync = !legit sync
-	switch = !legit switch
-	resync = !legit resync
 [include]
 	path = ~/.gitconfig_local
 
-[mergetool "sourcetree"]
-	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
+[http]
+	sslVerify = true

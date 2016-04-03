@@ -24,3 +24,6 @@ if sys.version_info.major==2:
         atexit.register(readline.write_history_file, histfile)
         del os, histfile
 
+#import sys
+#sys.path.append('/usr/local/lib/python2.7/site-packages/')
+
