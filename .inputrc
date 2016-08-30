@@ -14,8 +14,9 @@ set convert-meta off
 # Turn on case insensitivity for tab-completion
 # Ex.: type "doc<tab>" to search for "Documents"
 #set completion-ignore-case On
+set completion-ignore-case off
 
-#set show-all-if-ambiguous on
+set show-all-if-ambiguous on
 #TAB: menu-complete
 
 ## Readline behavior
@@ -28,3 +29,6 @@ set mark-symlinked-directories On
 
 set match-hidden-files off
 set visible-stats on
+
+set colored-stats on
+
