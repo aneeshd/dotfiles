@@ -43,7 +43,7 @@ brew upgrade --all
 brew install $PACKAGES
 brew cask install $CASKS
 
-brew cask install qlcolorcode qlstephen qlmarkdown quicklook-json qlprettypatch quicklook-csv betterzipql webp-quicklook suspicious-package && qlmanage -r
+brew cask install qlcolorcode qlstephen qlmarkdown quicklook-json qlprettypatch quicklook-csv betterzipql webpquicklook suspicious-package && qlmanage -r
 
 brew cleanup
 brew prune
