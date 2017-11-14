@@ -7,8 +7,8 @@ if sys.version_info.major==2:
         pass
     else:
         import rlcompleter
-#        readline.parse_and_bind("tab: complete")
-#        readline.parse_and_bind("bind ^I rl_complete")
+        readline.parse_and_bind("tab: complete")
+        readline.parse_and_bind("bind ^I rl_complete")
 
         import os
         histfile = os.path.join(os.environ["HOME"], ".pyhist")
