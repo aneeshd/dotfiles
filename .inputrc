@@ -15,8 +15,7 @@ set convert-meta off
 
 # Turn on case insensitivity for tab-completion
 # Ex.: type "doc<tab>" to search for "Documents"
-#set completion-ignore-case On
-set completion-ignore-case off
+#set completion-ignore-case on
 
 set show-all-if-ambiguous on
 #TAB: menu-complete

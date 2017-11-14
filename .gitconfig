@@ -1,5 +1,5 @@
 [user]
-	name = "Aneesh Dalvi"
+	name = Aneesh Dalvi
 	email = adalvi@idirect.net
 [core]
 	excludesfile = ~/.gitignore_global
@@ -21,3 +21,5 @@
 
 [http]
 	sslVerify = true
+[status]
+	submoduleSummary = true
