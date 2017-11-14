@@ -14,4 +14,4 @@ elif [ -f /etc/bash_completion ]; then
 fi
 
 
-test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
+test -e "${HOME}/dotfiles/.iterm2_shell_integration.bash" && source "${HOME}/dotfiles/.iterm2_shell_integration.bash"

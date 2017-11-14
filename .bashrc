@@ -18,7 +18,7 @@ export COPYFILE_DISABLE=true
 
 shopt -s cdspell
 
-CDPATH='.:..:../..:~:~/Projects:~/Documents'
+#CDPATH='.:..:../..:~:~/Projects:~/Documents'
 
 bind space:magic-space   # Space dynamically expands any ! history expansions
 

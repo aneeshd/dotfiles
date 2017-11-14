@@ -72,7 +72,7 @@ ITERM_PREV_PS1="$PS1"
 
 # Avoid duplicate inclusion
 if [[ "$__bp_imported" == "defined" ]]; then
-    return 0
+return 0
 fi
 __bp_imported="defined"
 
@@ -89,13 +89,13 @@ __bp_trap_install_string="trap '__bp_preexec_invoke_exec \"\$_\"' DEBUG;"
 # so we can accurately invoke preexec with a command from our
 # history even if it starts with a space.
 __bp_adjust_histcontrol() {
-    local histcontrol
-    histcontrol="${HISTCONTROL//ignorespace}"
-    # Replace ignoreboth with ignoredups
-    if [[ "$histcontrol" == *"ignoreboth"* ]]; then
-        histcontrol="ignoredups:${histcontrol//ignoreboth}"
-    fi;
-    export HISTCONTROL="$histcontrol"
+local histcontrol
+histcontrol="${HISTCONTROL//ignorespace}"
+# Replace ignoreboth with ignoredups
+if [[ "$histcontrol" == *"ignoreboth"* ]]; then
+histcontrol="ignoredups:${histcontrol//ignoreboth}"
+fi;
+export HISTCONTROL="$histcontrol"
 }
 
 # This variable describes whether we are currently in "interactive mode";
@@ -106,17 +106,17 @@ __bp_adjust_histcontrol() {
 __bp_preexec_interactive_mode=""
 
 __bp_trim_whitespace() {
-    local var=$@
-    var="${var#"${var%%[![:space:]]*}"}"   # remove leading whitespace characters
-    var="${var%"${var##*[![:space:]]}"}"   # remove trailing whitespace characters
-    echo -n "$var"
+local var=$@
+var="${var#"${var%%[![:space:]]*}"}"   # remove leading whitespace characters
+var="${var%"${var##*[![:space:]]}"}"   # remove trailing whitespace characters
+echo -n "$var"
 }
 
 # This function is installed as part of the PROMPT_COMMAND;
 # It sets a variable to indicate that the prompt was just displayed,
 # to allow the DEBUG trap to know that the next command is likely interactive.
 __bp_interactive_mode() {
-    __bp_preexec_interactive_mode="on";
+__bp_preexec_interactive_mode="on";
 }
 
 
@@ -124,48 +124,48 @@ __bp_interactive_mode() {
 # It will invoke any functions defined in the precmd_functions array.
 __bp_precmd_invoke_cmd() {
 
-    # Save the returned value from our last command
-    __bp_last_ret_value="$?"
+# Save the returned value from our last command
+__bp_last_ret_value="$?"
 
-    # For every function defined in our function array. Invoke it.
-    local precmd_function
-    for precmd_function in "${precmd_functions[@]}"; do
+# For every function defined in our function array. Invoke it.
+local precmd_function
+for precmd_function in "${precmd_functions[@]}"; do
 
-        # Only execute this function if it actually exists.
-        # Test existence of functions with: declare -[Ff]
-        if type -t "$precmd_function" 1>/dev/null; then
-            __bp_set_ret_value "$__bp_last_ret_value" "$__bp_last_argument_prev_command"
-            $precmd_function
-        fi
-    done
+# Only execute this function if it actually exists.
+# Test existence of functions with: declare -[Ff]
+if type -t "$precmd_function" 1>/dev/null; then
+__bp_set_ret_value "$__bp_last_ret_value" "$__bp_last_argument_prev_command"
+$precmd_function
+fi
+done
 }
 
 # Sets a return value in $?. We may want to get access to the $? variable in our
 # precmd functions. This is available for instance in zsh. We can simulate it in bash
 # by setting the value here.
 __bp_set_ret_value() {
-    return $1
+return $1
 }
 
 __bp_in_prompt_command() {
 
-    local prompt_command_array
-    IFS=';' read -ra prompt_command_array <<< "$PROMPT_COMMAND"
+local prompt_command_array
+IFS=';' read -ra prompt_command_array <<< "$PROMPT_COMMAND"
 
-    local trimmed_arg
-    trimmed_arg=$(__bp_trim_whitespace "$1")
+local trimmed_arg
+trimmed_arg=$(__bp_trim_whitespace "$1")
 
-    local command
-    for command in "${prompt_command_array[@]}"; do
-        local trimmed_command
-        trimmed_command=$(__bp_trim_whitespace "$command")
-        # Only execute each function if it actually exists.
-        if [[ "$trimmed_command" == "$trimmed_arg" ]]; then
-            return 0
-        fi
-    done
+local command
+for command in "${prompt_command_array[@]}"; do
+local trimmed_command
+trimmed_command=$(__bp_trim_whitespace "$command")
+# Only execute each function if it actually exists.
+if [[ "$trimmed_command" == "$trimmed_arg" ]]; then
+return 0
+fi
+done
 
-    return 1
+return 1
 }
 
 # This function is installed as the DEBUG trap.  It is invoked before each
@@ -175,146 +175,146 @@ __bp_in_prompt_command() {
 __bp_preexec_invoke_exec() {
 
 
-    # Save the contents of $_ so that it can be restored later on.
-    # https://stackoverflow.com/questions/40944532/bash-preserve-in-a-debug-trap#40944702
-    __bp_last_argument_prev_command="$1"
+# Save the contents of $_ so that it can be restored later on.
+# https://stackoverflow.com/questions/40944532/bash-preserve-in-a-debug-trap#40944702
+__bp_last_argument_prev_command="$1"
 
-    # Checks if the file descriptor is not standard out (i.e. '1')
-    # __bp_delay_install checks if we're in test. Needed for bats to run.
-    # Prevents preexec from being invoked for functions in PS1
-    if [[ ! -t 1 && -z "$__bp_delay_install" ]]; then
-        return
-    fi
+# Checks if the file descriptor is not standard out (i.e. '1')
+# __bp_delay_install checks if we're in test. Needed for bats to run.
+# Prevents preexec from being invoked for functions in PS1
+if [[ ! -t 1 && -z "$__bp_delay_install" ]]; then
+return
+fi
 
-    if [[ -n "$COMP_LINE" ]]; then
-        # We're in the middle of a completer. This obviously can't be
-        # an interactively issued command.
-        return
-    fi
-    if [[ -z "$__bp_preexec_interactive_mode" ]]; then
-        # We're doing something related to displaying the prompt.  Let the
-        # prompt set the title instead of me.
-        return
-    else
-        # If we're in a subshell, then the prompt won't be re-displayed to put
-        # us back into interactive mode, so let's not set the variable back.
-        # In other words, if you have a subshell like
-        #   (sleep 1; sleep 2)
-        # You want to see the 'sleep 2' as a set_command_title as well.
-        if [[ 0 -eq "$BASH_SUBSHELL" ]]; then
-            __bp_preexec_interactive_mode=""
-        fi
-    fi
+if [[ -n "$COMP_LINE" ]]; then
+# We're in the middle of a completer. This obviously can't be
+# an interactively issued command.
+return
+fi
+if [[ -z "$__bp_preexec_interactive_mode" ]]; then
+# We're doing something related to displaying the prompt.  Let the
+# prompt set the title instead of me.
+return
+else
+# If we're in a subshell, then the prompt won't be re-displayed to put
+# us back into interactive mode, so let's not set the variable back.
+# In other words, if you have a subshell like
+#   (sleep 1; sleep 2)
+# You want to see the 'sleep 2' as a set_command_title as well.
+if [[ 0 -eq "$BASH_SUBSHELL" ]]; then
+__bp_preexec_interactive_mode=""
+fi
+fi
 
-    if  __bp_in_prompt_command "$BASH_COMMAND"; then
-        # If we're executing something inside our prompt_command then we don't
-        # want to call preexec. Bash prior to 3.1 can't detect this at all :/
-        __bp_preexec_interactive_mode=""
-        return
-    fi
+if  __bp_in_prompt_command "$BASH_COMMAND"; then
+# If we're executing something inside our prompt_command then we don't
+# want to call preexec. Bash prior to 3.1 can't detect this at all :/
+__bp_preexec_interactive_mode=""
+return
+fi
 
-    local this_command
-    this_command=$(HISTTIMEFORMAT= builtin history 1 | { read -r _ this_command; echo "$this_command"; })
+local this_command
+this_command=$(HISTTIMEFORMAT= builtin history 1 | { read -r _ this_command; echo "$this_command"; })
 
-    # Sanity check to make sure we have something to invoke our function with.
-    if [[ -z "$this_command" ]]; then
-        return
-    fi
+# Sanity check to make sure we have something to invoke our function with.
+if [[ -z "$this_command" ]]; then
+return
+fi
 
-    # If none of the previous checks have returned out of this function, then
-    # the command is in fact interactive and we should invoke the user's
-    # preexec functions.
+# If none of the previous checks have returned out of this function, then
+# the command is in fact interactive and we should invoke the user's
+# preexec functions.
 
-    # For every function defined in our function array. Invoke it.
-    local preexec_function
-    local preexec_ret_value=0
-    for preexec_function in "${preexec_functions[@]}"; do
+# For every function defined in our function array. Invoke it.
+local preexec_function
+local preexec_ret_value=0
+for preexec_function in "${preexec_functions[@]}"; do
 
-        # Only execute each function if it actually exists.
-        # Test existence of function with: declare -[fF]
-        if type -t "$preexec_function" 1>/dev/null; then
-            __bp_set_ret_value $__bp_last_ret_value
-            $preexec_function "$this_command"
-            preexec_ret_value="$?"
-        fi
-    done
+# Only execute each function if it actually exists.
+# Test existence of function with: declare -[fF]
+if type -t "$preexec_function" 1>/dev/null; then
+__bp_set_ret_value $__bp_last_ret_value
+$preexec_function "$this_command"
+preexec_ret_value="$?"
+fi
+done
 
-    # Restore the last argument of the last executed command
-    # Also preserves the return value of the last function executed in preexec
-    # If `extdebug` is enabled a non-zero return value from the last function
-    # in prexec causes the command not to execute
-    # Run `shopt -s extdebug` to enable
-    __bp_set_ret_value "$preexec_ret_value" "$__bp_last_argument_prev_command"
+# Restore the last argument of the last executed command
+# Also preserves the return value of the last function executed in preexec
+# If `extdebug` is enabled a non-zero return value from the last function
+# in prexec causes the command not to execute
+# Run `shopt -s extdebug` to enable
+__bp_set_ret_value "$preexec_ret_value" "$__bp_last_argument_prev_command"
 }
 
 # Returns PROMPT_COMMAND with a semicolon appended
 # if it doesn't already have one.
 __bp_prompt_command_with_semi_colon() {
 
-    # Trim our existing PROMPT_COMMAND
-    local trimmed
-    trimmed=$(__bp_trim_whitespace "$PROMPT_COMMAND")
+# Trim our existing PROMPT_COMMAND
+local trimmed
+trimmed=$(__bp_trim_whitespace "$PROMPT_COMMAND")
 
-    # Take our existing prompt command and append a semicolon to it
-    # if it doesn't already have one.
-    local existing_prompt_command
-    if [[ -n "$trimmed" ]]; then
-        existing_prompt_command=${trimmed%${trimmed##*[![:space:]]}}
-        existing_prompt_command=${existing_prompt_command%;}
-        existing_prompt_command=${existing_prompt_command/%/;}
-    else
-        existing_prompt_command=""
-    fi
+# Take our existing prompt command and append a semicolon to it
+# if it doesn't already have one.
+local existing_prompt_command
+if [[ -n "$trimmed" ]]; then
+existing_prompt_command=${trimmed%${trimmed##*[![:space:]]}}
+existing_prompt_command=${existing_prompt_command%;}
+existing_prompt_command=${existing_prompt_command/%/;}
+else
+existing_prompt_command=""
+fi
 
-    echo -n "$existing_prompt_command"
+echo -n "$existing_prompt_command"
 }
 
 __bp_install() {
 
-    # Remove setting our trap from PROMPT_COMMAND
-    PROMPT_COMMAND="${PROMPT_COMMAND//$__bp_trap_install_string}"
+# Remove setting our trap from PROMPT_COMMAND
+PROMPT_COMMAND="${PROMPT_COMMAND//$__bp_trap_install_string}"
 
-    # Remove this function from our PROMPT_COMMAND
-    PROMPT_COMMAND="${PROMPT_COMMAND//__bp_install;}"
+# Remove this function from our PROMPT_COMMAND
+PROMPT_COMMAND="${PROMPT_COMMAND//__bp_install;}"
 
-    # Exit if we already have this installed.
-    if [[ "$PROMPT_COMMAND" == *"__bp_precmd_invoke_cmd"* ]]; then
-        return 1;
-    fi
+# Exit if we already have this installed.
+if [[ "$PROMPT_COMMAND" == *"__bp_precmd_invoke_cmd"* ]]; then
+return 1;
+fi
 
-    # Adjust our HISTCONTROL Variable if needed.
-    __bp_adjust_histcontrol
-
-
-    # Issue #25. Setting debug trap for subshells causes sessions to exit for
-    # backgrounded subshell commands (e.g. (pwd)& ). Believe this is a bug in Bash.
-    #
-    # Disabling this by default. It can be enabled by setting this variable.
-    if [[ -n "$__bp_enable_subshells" ]]; then
-
-        # Set so debug trap will work be invoked in subshells.
-        set -o functrace > /dev/null 2>&1
-        shopt -s extdebug > /dev/null 2>&1
-    fi;
+# Adjust our HISTCONTROL Variable if needed.
+__bp_adjust_histcontrol
 
 
-    local existing_prompt_command
-    existing_prompt_command=$(__bp_prompt_command_with_semi_colon)
+# Issue #25. Setting debug trap for subshells causes sessions to exit for
+# backgrounded subshell commands (e.g. (pwd)& ). Believe this is a bug in Bash.
+#
+# Disabling this by default. It can be enabled by setting this variable.
+if [[ -n "$__bp_enable_subshells" ]]; then
 
-    # Install our hooks in PROMPT_COMMAND to allow our trap to know when we've
-    # actually entered something.
-    PROMPT_COMMAND="__bp_precmd_invoke_cmd; ${existing_prompt_command} __bp_interactive_mode"
-    eval "$__bp_trap_install_string"
+# Set so debug trap will work be invoked in subshells.
+set -o functrace > /dev/null 2>&1
+shopt -s extdebug > /dev/null 2>&1
+fi;
 
-    # Add two functions to our arrays for convenience
-    # of definition.
-    precmd_functions+=(precmd)
-    preexec_functions+=(preexec)
 
-    # Since this is in PROMPT_COMMAND, invoke any precmd functions we have defined.
-    __bp_precmd_invoke_cmd
-    # Put us in interactive mode for our first command.
-    __bp_interactive_mode
+local existing_prompt_command
+existing_prompt_command=$(__bp_prompt_command_with_semi_colon)
+
+# Install our hooks in PROMPT_COMMAND to allow our trap to know when we've
+# actually entered something.
+PROMPT_COMMAND="__bp_precmd_invoke_cmd; ${existing_prompt_command} __bp_interactive_mode"
+eval "$__bp_trap_install_string"
+
+# Add two functions to our arrays for convenience
+# of definition.
+precmd_functions+=(precmd)
+preexec_functions+=(preexec)
+
+# Since this is in PROMPT_COMMAND, invoke any precmd functions we have defined.
+__bp_precmd_invoke_cmd
+# Put us in interactive mode for our first command.
+__bp_interactive_mode
 }
 
 # Sets our trap and __bp_install as part of our PROMPT_COMMAND to install
@@ -324,22 +324,22 @@ __bp_install() {
 # the function.
 __bp_install_after_session_init() {
 
-    # Make sure this is bash that's running this and return otherwise.
-    if [[ -z "$BASH_VERSION" ]]; then
-        return 1;
-    fi
+# Make sure this is bash that's running this and return otherwise.
+if [[ -z "$BASH_VERSION" ]]; then
+return 1;
+fi
 
-    local existing_prompt_command
-    existing_prompt_command=$(__bp_prompt_command_with_semi_colon)
+local existing_prompt_command
+existing_prompt_command=$(__bp_prompt_command_with_semi_colon)
 
-    # Add our installation to be done last via our PROMPT_COMMAND. These are
-    # removed by __bp_install when it's invoked so it only runs once.
-    PROMPT_COMMAND="${existing_prompt_command} $__bp_trap_install_string __bp_install;"
+# Add our installation to be done last via our PROMPT_COMMAND. These are
+# removed by __bp_install when it's invoked so it only runs once.
+PROMPT_COMMAND="${existing_prompt_command} $__bp_trap_install_string __bp_install;"
 }
 
 # Run our install so long as we're not delaying it.
 if [[ -z "$__bp_delay_install" ]]; then
-    __bp_install_after_session_init
+__bp_install_after_session_init
 fi;
 
 # -- BEGIN BASH-PREEXEC.SH --
@@ -350,172 +350,172 @@ fi;
 # We overwrite the upstream __bp_adjust_histcontrol function whcih gets called from the next
 # PROMPT_COMMAND invocation.
 function __bp_adjust_histcontrol() {
-  true
+true
 }
 
 function iterm2_begin_osc {
-  printf "\033]"
+printf "\033]"
 }
 
 function iterm2_end_osc {
-  printf "\007"
+printf "\007"
 }
 
 function iterm2_print_state_data() {
-  iterm2_begin_osc
-  printf "1337;RemoteHost=%s@%s" "$USER" "$iterm2_hostname"
-  iterm2_end_osc
+iterm2_begin_osc
+printf "1337;RemoteHost=%s@%s" "$USER" "$iterm2_hostname"
+iterm2_end_osc
 
-  iterm2_begin_osc
-  printf "1337;CurrentDir=%s" "$PWD"
-  iterm2_end_osc
+iterm2_begin_osc
+printf "1337;CurrentDir=%s" "$PWD"
+iterm2_end_osc
 
-  iterm2_print_user_vars
+iterm2_print_user_vars
 }
 
 # Usage: iterm2_set_user_var key value
 function iterm2_set_user_var() {
-  iterm2_begin_osc
-  printf "1337;SetUserVar=%s=%s" "$1" $(printf "%s" "$2" | base64 | tr -d '\n')
-  iterm2_end_osc
+iterm2_begin_osc
+printf "1337;SetUserVar=%s=%s" "$1" $(printf "%s" "$2" | base64 | tr -d '\n')
+iterm2_end_osc
 }
 
 if [ -z "$(type -t iterm2_print_user_vars)" ] || [ "$(type -t iterm2_print_user_vars)" != function ]; then
-  # iterm2_print_user_vars is not already defined. Provide a no-op default version.
-  #
-  # Users can write their own version of this function. It should call
-  # iterm2_set_user_var but not produce any other output.
-  function iterm2_print_user_vars() {
-    true
-  }
+# iterm2_print_user_vars is not already defined. Provide a no-op default version.
+#
+# Users can write their own version of this function. It should call
+# iterm2_set_user_var but not produce any other output.
+function iterm2_print_user_vars() {
+true
+}
 fi
 
 function iterm2_prompt_prefix() {
-  iterm2_begin_osc
-  printf "133;D;\$?"
-  iterm2_end_osc
+iterm2_begin_osc
+printf "133;D;\$?"
+iterm2_end_osc
 }
 
 function iterm2_prompt_mark() {
-  iterm2_begin_osc
-  printf "133;A"
-  iterm2_end_osc
+iterm2_begin_osc
+printf "133;A"
+iterm2_end_osc
 }
 
 function iterm2_prompt_suffix() {
-  iterm2_begin_osc
-  printf "133;B"
-  iterm2_end_osc
+iterm2_begin_osc
+printf "133;B"
+iterm2_end_osc
 }
 
 function iterm2_print_version_number() {
-  iterm2_begin_osc
-  printf "1337;ShellIntegrationVersion=9;shell=bash"
-  iterm2_end_osc
+iterm2_begin_osc
+printf "1337;ShellIntegrationVersion=9;shell=bash"
+iterm2_end_osc
 }
 
 
 # If hostname -f is slow on your system, set iterm2_hostname before sourcing this script.
 if [ -z "${iterm2_hostname:-}" ]; then
-  iterm2_hostname=$(hostname -f 2>/dev/null)
-  # some flavors of BSD (i.e. NetBSD and OpenBSD) don't have the -f option
-  if [ $? -ne 0 ]; then
-    iterm2_hostname=$(hostname)
-  fi
+iterm2_hostname=$(hostname -f 2>/dev/null)
+# some flavors of BSD (i.e. NetBSD and OpenBSD) don't have the -f option
+if [ $? -ne 0 ]; then
+iterm2_hostname=$(hostname)
+fi
 fi
 
 # Runs after interactively edited command but before execution
 __iterm2_preexec() {
-    # Save the returned value from our last command
-    __iterm2_last_ret_value="$?"
+# Save the returned value from our last command
+__iterm2_last_ret_value="$?"
 
-    iterm2_begin_osc
-    printf "133;C;"
-    iterm2_end_osc
-    # If PS1 still has the value we set it to in iterm2_preexec_invoke_cmd then
-    # restore it to its original value. It might have changed if you have
-    # another PROMPT_COMMAND (like liquidprompt) that modifies PS1.
-    if [ -n "${ITERM_ORIG_PS1+xxx}" -a "$PS1" = "$ITERM_PREV_PS1" ]
-    then
-      export PS1="$ITERM_ORIG_PS1"
-    fi
-    iterm2_ran_preexec="yes"
+iterm2_begin_osc
+printf "133;C;"
+iterm2_end_osc
+# If PS1 still has the value we set it to in iterm2_preexec_invoke_cmd then
+# restore it to its original value. It might have changed if you have
+# another PROMPT_COMMAND (like liquidprompt) that modifies PS1.
+if [ -n "${ITERM_ORIG_PS1+xxx}" -a "$PS1" = "$ITERM_PREV_PS1" ]
+then
+export PS1="$ITERM_ORIG_PS1"
+fi
+iterm2_ran_preexec="yes"
 
-    __bp_set_ret_value "$__iterm2_last_ret_value" "$__bp_last_argument_prev_command"
+__bp_set_ret_value "$__iterm2_last_ret_value" "$__bp_last_argument_prev_command"
 }
 
 function __iterm2_precmd () {
-    __iterm2_last_ret_value="$?"
+__iterm2_last_ret_value="$?"
 
-    # Work around a bug in CentOS 7.2 where preexec doesn't run if you press
-    # ^C while entering a command.
-    if [[ -z "${iterm2_ran_preexec:-}" ]]
-    then
-        __iterm2_preexec ""
-    fi
-    iterm2_ran_preexec=""
+# Work around a bug in CentOS 7.2 where preexec doesn't run if you press
+# ^C while entering a command.
+if [[ -z "${iterm2_ran_preexec:-}" ]]
+then
+__iterm2_preexec ""
+fi
+iterm2_ran_preexec=""
 
 
 
-    # This is an iTerm2 addition to try to work around a problem in the
-    # original preexec.bash.
-    # When the PS1 has command substitutions, this gets invoked for each
-    # substitution and each command that's run within the substitution, which
-    # really adds up. It would be great if we could do something like this at
-    # the end of this script:
-    #   PS1="$(iterm2_prompt_prefix)$PS1($iterm2_prompt_suffix)"
-    # and have iterm2_prompt_prefix set a global variable that tells precmd not to
-    # output anything and have iterm2_prompt_suffix reset that variable.
-    # Unfortunately, command substitutions run in subshells and can't
-    # communicate to the outside world.
-    # Instead, we have this workaround. We save the original value of PS1 in
-    # $ITERM_ORIG_PS1. Then each time this function is run (it's called from
-    # PROMPT_COMMAND just before the prompt is shown) it will change PS1 to a
-    # string without any command substitutions by doing eval on ITERM_ORIG_PS1. At
-    # this point ITERM_PREEXEC_INTERACTIVE_MODE is still the empty string, so preexec
-    # won't produce output for command substitutions.
+# This is an iTerm2 addition to try to work around a problem in the
+# original preexec.bash.
+# When the PS1 has command substitutions, this gets invoked for each
+# substitution and each command that's run within the substitution, which
+# really adds up. It would be great if we could do something like this at
+# the end of this script:
+#   PS1="$(iterm2_prompt_prefix)$PS1($iterm2_prompt_suffix)"
+# and have iterm2_prompt_prefix set a global variable that tells precmd not to
+# output anything and have iterm2_prompt_suffix reset that variable.
+# Unfortunately, command substitutions run in subshells and can't
+# communicate to the outside world.
+# Instead, we have this workaround. We save the original value of PS1 in
+# $ITERM_ORIG_PS1. Then each time this function is run (it's called from
+# PROMPT_COMMAND just before the prompt is shown) it will change PS1 to a
+# string without any command substitutions by doing eval on ITERM_ORIG_PS1. At
+# this point ITERM_PREEXEC_INTERACTIVE_MODE is still the empty string, so preexec
+# won't produce output for command substitutions.
 
-    # The first time this is called ITERM_ORIG_PS1 is unset. This tests if the variable
-    # is undefined (not just empty) and initializes it. We can't initialize this at the
-    # top of the script because it breaks with liquidprompt. liquidprompt wants to
-    # set PS1 from a PROMPT_COMMAND that runs just before us. Setting ITERM_ORIG_PS1
-    # at the top of the script will overwrite liquidprompt's PS1, whose value would
-    # never make it into ITERM_ORIG_PS1. Issue 4532. It's important to check
-    # if it's undefined before checking if it's empty because some users have
-    # bash set to error out on referencing an undefined variable.
-    if [ -z "${ITERM_ORIG_PS1+xxx}" ]
-    then
-      # ITERM_ORIG_PS1 always holds the last user-set value of PS1.
-      # You only get here on the first time iterm2_preexec_invoke_cmd is called.
-      export ITERM_ORIG_PS1="$PS1"
-    fi
+# The first time this is called ITERM_ORIG_PS1 is unset. This tests if the variable
+# is undefined (not just empty) and initializes it. We can't initialize this at the
+# top of the script because it breaks with liquidprompt. liquidprompt wants to
+# set PS1 from a PROMPT_COMMAND that runs just before us. Setting ITERM_ORIG_PS1
+# at the top of the script will overwrite liquidprompt's PS1, whose value would
+# never make it into ITERM_ORIG_PS1. Issue 4532. It's important to check
+# if it's undefined before checking if it's empty because some users have
+# bash set to error out on referencing an undefined variable.
+if [ -z "${ITERM_ORIG_PS1+xxx}" ]
+then
+# ITERM_ORIG_PS1 always holds the last user-set value of PS1.
+# You only get here on the first time iterm2_preexec_invoke_cmd is called.
+export ITERM_ORIG_PS1="$PS1"
+fi
 
-    if [[ "$PS1" != "$ITERM_PREV_PS1" ]]
-    then
-      export ITERM_ORIG_PS1="$PS1"
-    fi
+if [[ "$PS1" != "$ITERM_PREV_PS1" ]]
+then
+export ITERM_ORIG_PS1="$PS1"
+fi
 
-    # Get the value of the prompt prefix, which will change $?
-    \local iterm2_prompt_prefix_value="$(iterm2_prompt_prefix)"
+# Get the value of the prompt prefix, which will change $?
+\local iterm2_prompt_prefix_value="$(iterm2_prompt_prefix)"
 
-    # Add the mark unless the prompt includes '$(iterm2_prompt_mark)' as a substring.
-    if [[ $ITERM_ORIG_PS1 != *'$(iterm2_prompt_mark)'* ]]
-    then
-      iterm2_prompt_prefix_value="$iterm2_prompt_prefix_value$(iterm2_prompt_mark)"
-    fi
+# Add the mark unless the prompt includes '$(iterm2_prompt_mark)' as a substring.
+if [[ $ITERM_ORIG_PS1 != *'$(iterm2_prompt_mark)'* ]]
+then
+iterm2_prompt_prefix_value="$iterm2_prompt_prefix_value$(iterm2_prompt_mark)"
+fi
 
-    # Send escape sequences with current directory and hostname.
-    iterm2_print_state_data
+# Send escape sequences with current directory and hostname.
+iterm2_print_state_data
 
-    # Reset $? to its saved value, which might be used in $ITERM_ORIG_PS1.
-    __bp_set_ret_value "$__iterm2_last_ret_value" "$__bp_last_argument_prev_command"
+# Reset $? to its saved value, which might be used in $ITERM_ORIG_PS1.
+__bp_set_ret_value "$__iterm2_last_ret_value" "$__bp_last_argument_prev_command"
 
-    # Set PS1 to various escape sequences, the user's preferred prompt, and more escape sequences.
-    export PS1="\[$iterm2_prompt_prefix_value\]$ITERM_ORIG_PS1\[$(iterm2_prompt_suffix)\]"
+# Set PS1 to various escape sequences, the user's preferred prompt, and more escape sequences.
+export PS1="\[$iterm2_prompt_prefix_value\]$ITERM_ORIG_PS1\[$(iterm2_prompt_suffix)\]"
 
-    # Save the value we just set PS1 to so if the user changes PS1 we'll know and we can update ITERM_ORIG_PS1.
-    export ITERM_PREV_PS1="$PS1"
-    __bp_set_ret_value "$__iterm2_last_ret_value" "$__bp_last_argument_prev_command"
+# Save the value we just set PS1 to so if the user changes PS1 we'll know and we can update ITERM_ORIG_PS1.
+export ITERM_PREV_PS1="$PS1"
+__bp_set_ret_value "$__iterm2_last_ret_value" "$__bp_last_argument_prev_command"
 }
 
 # Install my functions
