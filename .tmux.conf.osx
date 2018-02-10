@@ -2,9 +2,9 @@ set -g default-command "reattach-to-user-namespace -l $SHELL"
 
 # replace copy-selection with copy-pipe + pbcopy
 # doesn't work with mouse selection
-bind-key -t vi-copy    C-j copy-pipe "reattach-to-user-namespace pbcopy"
-bind-key -t vi-copy  Enter copy-pipe "reattach-to-user-namespace pbcopy"
-bind-key -t vi-copy      y copy-pipe "reattach-to-user-namespace pbcopy"
+#bind-key -T vi-copy    C-j copy-pipe "reattach-to-user-namespace pbcopy"
+#bind-key -T vi-copy  Enter copy-pipe "reattach-to-user-namespace pbcopy"
+#bind-key -T vi-copy      y copy-pipe "reattach-to-user-namespace pbcopy"
 
 # Bind ']' to use pbpaste
 bind ] run "reattach-to-user-namespace pbpaste | tmux load-buffer - && tmux paste-buffer"
