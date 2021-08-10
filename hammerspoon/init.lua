@@ -162,7 +162,7 @@ end
 -- adapted from https://github.com/STRML/init/blob/master/hammerspoon/init.lua
 --
 
-local home = {tolv = 1, sjutton = 1}
+local home = {tolv = 1, sjutton = 1, tusan = 1}
 local lastSSID = hs.wifi.currentNetwork() or ''
 
 function ssidChangedCallback()

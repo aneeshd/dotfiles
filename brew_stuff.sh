@@ -2,31 +2,16 @@
 
 PACKAGES="\
 	coreutils \
-	git \
-	bash-completion \
-	reattach-to-user-namespace \
-	brew-cask \
 	wget \
-	scons \
-	tmux \
-	vim \
-	graphviz \
 	dos2unix \
 	ag \
-	astyle \
-	fpp \
 "
 
 CASKS="\
-	virtualbox \
-	vagrant \
-	vagrant-manager \
 	iterm2 \
-	xquartz \
-	wireshark \
-	java \
-	flash \
 	hammerspoon \
+	brave-browser \
+	visual-studio-code \
 "
 
 if ( ! which brew ); then
@@ -34,20 +19,14 @@ if ( ! which brew ); then
 	ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"; 
 fi
 
-brew tap caskroom/cask
-brew tap caskroom/versions
-
 brew update
-brew upgrade --all
+brew upgrade
 
 brew install $PACKAGES
-brew cask install $CASKS
+brew install $CASKS
 
-brew cask install qlcolorcode qlstephen qlmarkdown quicklook-json qlprettypatch quicklook-csv betterzipql webpquicklook suspicious-package && qlmanage -r
+brew install betterzip qlcolorcode qlstephen qlmarkdown quicklook-json qlimagesize apparency quicklookase qlvideo qlprettypatch quicklook-csv webpquicklook suspicious-package && qlmanage -r
+xattr -d -r com.apple.quarantine ~/Library/QuickLook
 
 brew cleanup
-brew prune
-
-# install Alcatraz
-curl -fsSL https://raw.githubusercontent.com/supermarin/Alcatraz/master/Scripts/install.sh | sh
 
